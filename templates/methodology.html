@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}AirIQ — Methodology{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════════ PAGE HERO ══════════════════ -->
+<section class="page-hero">
+  <div class="container text-center">
+    <div class="hero-badge mb-3"><i class="bi bi-diagram-3 me-2"></i>Technical Overview</div>
+    <h1 class="page-hero-title">Methodology</h1>
+    <p class="page-hero-subtitle">How AirIQ collects, processes, and displays air quality data</p>
+  </div>
+</section>
+
+<!-- ══════════════════ PIPELINE DIAGRAM ══════════════════ -->
+<section class="section-padded">
+  <div class="container">
+    <div class="section-label text-center mb-5">Data Pipeline</div>
+
+    <div class="pipeline-steps">
+      {% set steps = [
+        ('1', 'bi-keyboard',       'User Input',         'User enters a city name through the web interface.'),
+        ('2', 'bi-geo-alt',        'Geocoding API',      'City name is converted to latitude & longitude via OpenWeatherMap Geocoding API.'),
+        ('3', 'bi-cloud-download', 'Pollution API',      'Coordinates are sent to the Air Pollution API which returns AQI and pollutant values.'),
+        ('4', 'bi-cpu',            'Data Processing',    'Flask backend parses JSON response, rounds values, and maps AQI index (1–5) to labels.'),
+        ('5', 'bi-bar-chart',      'Visualisation',      'Processed data is injected into Jinja2 templates and rendered with Bootstrap UI.'),
+      ] %}
+      {% for num, icon, title, desc in steps %}
+      <div class="pipeline-step">
+        <div class="pipeline-num">{{ num }}</div>
+        <div class="pipeline-icon"><i class="bi {{ icon }}"></i></div>
+        <div class="pipeline-body">
+          <h5 class="pipeline-title">{{ title }}</h5>
+          <p class="pipeline-desc mb-0">{{ desc }}</p>
+        </div>
+        {% if not loop.last %}<div class="pipeline-arrow"><i class="bi bi-arrow-down"></i></div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ AQI SCALE ══════════════════ -->
+<section class="section-padded features-bg">
+  <div class="container">
+    <div class="section-label text-center mb-5">AQI Classification (OpenWeatherMap Scale)</div>
+    <div class="table-responsive">
+      <table class="table methodology-table">
+        <thead>
+          <tr>
+            <th>Index</th>
+            <th>Category</th>
+            <th>PM2.5 (µg/m³)</th>
+            <th>Health Impact</th>
+            <th>Indicator</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1</strong></td>
+            <td>Good</td>
+            <td>0 – 10</td>
+            <td>Air quality is satisfactory. Little to no risk.</td>
+            <td><span class="aqi-pill good">Good</span></td>
+          </tr>
+          <tr>
+            <td><strong>2</strong></td>
+            <td>Fair</td>
+            <td>10 – 25</td>
+            <td>Acceptable. Possible concern for unusually sensitive groups.</td>
+            <td><span class="aqi-pill fair">Fair</span></td>
+          </tr>
+          <tr>
+            <td><strong>3</strong></td>
+            <td>Moderate</td>
+            <td>25 – 50</td>
+            <td>Sensitive groups may experience health effects.</td>
+            <td><span class="aqi-pill moderate">Moderate</span></td>
+          </tr>
+          <tr>
+            <td><strong>4</strong></td>
+            <td>Poor</td>
+            <td>50 – 75</td>
+            <td>Everyone may begin to experience health effects.</td>
+            <td><span class="aqi-pill poor">Poor</span></td>
+          </tr>
+          <tr>
+            <td><strong>5</strong></td>
+            <td>Very Poor</td>
+            <td>75+</td>
+            <td>Health warnings. Everyone may experience serious effects.</td>
+            <td><span class="aqi-pill very-poor">Very Poor</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TECH STACK ══════════════════ -->
+<section class="section-padded">
+  <div class="container">
+    <div class="section-label text-center mb-5">Technology Stack</div>
+    <div class="row g-3 justify-content-center">
+      {% set stack = [
+        ('bi-filetype-py',   'Python 3',        'Core programming language'),
+        ('bi-lightning',     'Flask',           'Lightweight web framework'),
+        ('bi-cloud-sun',     'OpenWeatherMap',  'Real-time AQI data API'),
+        ('bi-database',      'SQLite',          'User authentication storage'),
+        ('bi-bootstrap',     'Bootstrap 5',     'Responsive UI framework'),
+        ('bi-filetype-html', 'Jinja2',          'Server-side HTML templating'),
+      ] %}
+      {% for icon, name, desc in stack %}
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="tech-card text-center">
+          <i class="bi {{ icon }} tech-icon"></i>
+          <div class="tech-name">{{ name }}</div>
+          <div class="tech-desc">{{ desc }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}AirIQ — Results for {{ city }}{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════════ RESULT HERO ══════════════════ -->
+<section class="result-hero" style="--aqi-color: {{ aqi_color }};">
+  <div class="result-hero-glow"></div>
+  <div class="container position-relative text-center">
+
+    <div class="hero-badge mb-3">
+      <i class="bi bi-geo-alt-fill me-1"></i>{{ city }}{% if country %}, {{ country }}{% endif %}
+    </div>
+
+    <h1 class="result-city-title mb-1">Air Quality Report</h1>
+    <p class="result-coords mb-4">
+      <i class="bi bi-crosshair me-1"></i>{{ lat }}°N, {{ lon }}°E
+    </p>
+
+    <!-- ── AQI Badge ── -->
+    <div class="aqi-badge-large mb-3" style="background: {{ aqi_color }}22; border-color: {{ aqi_color }}66; color: {{ aqi_color }};">
+      <div class="aqi-badge-number">{{ aqi }}</div>
+      <div class="aqi-badge-label">{{ aqi_label }}</div>
+    </div>
+
+    <p class="result-desc">{{ aqi_desc }}</p>
+
+    <!-- ── AQI progress bar ── -->
+    <div class="aqi-bar-wrap mx-auto mt-4">
+      <div class="aqi-bar-track">
+        <div class="aqi-bar-fill" style="width: {{ (aqi / 5) * 100 }}%; background: {{ aqi_color }};"></div>
+      </div>
+      <div class="aqi-bar-labels d-flex justify-content-between mt-1">
+        <small>Good</small><small>Fair</small><small>Moderate</small><small>Poor</small><small>Very Poor</small>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ POLLUTANT CARDS ══════════════════ -->
+<section class="section-padded">
+  <div class="container">
+    <div class="section-label text-center mb-4">Pollutant Breakdown <small class="text-muted fw-normal fs-6">(µg/m³)</small></div>
+
+    <div class="row g-3 justify-content-center">
+
+      {% set pollutants = [
+        ('PM2.5',  pm2_5, 'bi-droplet-half',     25,   '#e74c3c', 'Fine particulate matter. WHO safe limit: 15 µg/m³ (24h).'),
+        ('PM10',   pm10,  'bi-cloud-haze2',       50,   '#e67e22', 'Coarse dust particles. WHO safe limit: 45 µg/m³ (24h).'),
+        ('CO',     co,    'bi-radioactive',       4000, '#8e44ad', 'Carbon monoxide. Safe below 4000 µg/m³.'),
+        ('NO₂',    no2,   'bi-lightning-charge',  40,   '#3498db', 'Nitrogen dioxide. WHO guideline: 25 µg/m³ (24h).'),
+        ('O₃',     o3,    'bi-sun',               100,  '#f39c12', 'Ozone. WHO guideline: 100 µg/m³ (8h).'),
+        ('SO₂',    so2,   'bi-cloud-fog2',        40,   '#1abc9c', 'Sulfur dioxide. WHO guideline: 40 µg/m³ (24h).'),
+      ] %}
+
+      {% for name, value, icon, limit, color, note in pollutants %}
+      {% set pct = [((value / limit) * 100) | round | int, 100] | min %}
+      <div class="col-sm-6 col-lg-4">
+        <div class="pollutant-card">
+          <div class="pollutant-header">
+            <div class="pollutant-icon-wrap" style="color: {{ color }}; background: {{ color }}18;">
+              <i class="bi {{ icon }}"></i>
+            </div>
+            <div>
+              <div class="pollutant-name">{{ name }}</div>
+              <div class="pollutant-value">{{ value }} <span>µg/m³</span></div>
+            </div>
+          </div>
+          <div class="pollutant-bar-track mt-3">
+            <div class="pollutant-bar-fill" style="width: {{ pct }}%; background: {{ color }};"></div>
+          </div>
+          <div class="pollutant-note mt-2">{{ note }}</div>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ HEALTH TIPS ══════════════════ -->
+<section class="section-padded tips-section">
+  <div class="container">
+    <div class="section-label text-center mb-4">Health Recommendations</div>
+
+    {% if aqi <= 2 %}
+    <div class="tip-block tip-good">
+      <i class="bi bi-check-circle-fill tip-icon"></i>
+      <div>
+        <strong>Great day to be outdoors!</strong> Air quality is good. Enjoy outdoor activities freely.
+        Keep windows open for fresh air circulation.
+      </div>
+    </div>
+    {% elif aqi == 3 %}
+    <div class="tip-block tip-moderate">
+      <i class="bi bi-exclamation-circle-fill tip-icon"></i>
+      <div>
+        <strong>Moderate conditions.</strong> Sensitive groups (children, elderly, asthma patients)
+        should limit prolonged outdoor exertion. Others can continue normal activities.
+      </div>
+    </div>
+    {% else %}
+    <div class="tip-block tip-poor">
+      <i class="bi bi-x-circle-fill tip-icon"></i>
+      <div>
+        <strong>Poor air quality — take precautions.</strong> Wear an N95 mask outdoors.
+        Keep windows closed. Avoid outdoor exercise. Use air purifiers indoors if available.
+        Sensitive groups should stay indoors.
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<!-- ══════════════════ ACTIONS ══════════════════ -->
+<section class="section-padded text-center">
+  <div class="container">
+    <a href="{{ url_for('home') }}" class="btn btn-primary-custom me-3">
+      <i class="bi bi-search me-2"></i>Search Another City
+    </a>
+    <button onclick="window.print()" class="btn btn-outline-secondary">
+      <i class="bi bi-printer me-2"></i>Print Report
+    </button>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Animate progress bars on load
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.pollutant-bar-fill, .aqi-bar-fill').forEach(bar => {
+      const w = bar.style.width;
+      bar.style.width = '0';
+      setTimeout(() => { bar.style.width = w; }, 200);
+    });
+  });
+</script>
+{% endblock %}

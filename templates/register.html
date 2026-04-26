@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}AirIQ — Register{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="auth-bg-grid"></div>
+  <div class="container position-relative">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-7">
+
+        <div class="auth-card">
+
+          <!-- Header -->
+          <div class="auth-card-header text-center mb-4">
+            <div class="auth-icon-wrap mb-3">
+              <i class="bi bi-person-plus"></i>
+            </div>
+            <h2 class="auth-title">Create Account</h2>
+            <p class="auth-subtitle">Join AirIQ to monitor air quality in your city</p>
+          </div>
+
+          <!-- Form -->
+          <form method="POST" action="{{ url_for('register') }}" novalidate id="registerForm">
+
+            <div class="form-group mb-3">
+              <label class="form-label-custom" for="username">
+                <i class="bi bi-person me-1"></i>Username
+              </label>
+              <input
+                type="text"
+                class="form-control-custom"
+                id="username"
+                name="username"
+                placeholder="Choose a username"
+                required
+                autofocus
+              />
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label-custom" for="email">
+                <i class="bi bi-envelope me-1"></i>Email Address
+              </label>
+              <input
+                type="email"
+                class="form-control-custom"
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label-custom" for="password">
+                <i class="bi bi-lock me-1"></i>Password
+              </label>
+              <div class="input-password-wrap">
+                <input
+                  type="password"
+                  class="form-control-custom"
+                  id="password"
+                  name="password"
+                  placeholder="Min 6 characters"
+                  required
+                  minlength="6"
+                />
+                <button type="button" class="password-toggle" onclick="togglePassword('password', this)">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group mb-4">
+              <label class="form-label-custom" for="confirm">
+                <i class="bi bi-lock-fill me-1"></i>Confirm Password
+              </label>
+              <div class="input-password-wrap">
+                <input
+                  type="password"
+                  class="form-control-custom"
+                  id="confirm"
+                  name="confirm"
+                  placeholder="Repeat your password"
+                  required
+                />
+                <button type="button" class="password-toggle" onclick="togglePassword('confirm', this)">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <div id="passwordMatchMsg" class="form-helper mt-1"></div>
+            </div>
+
+            <button type="submit" class="btn-auth w-100">
+              <i class="bi bi-person-check me-2"></i>Register Now
+            </button>
+
+          </form>
+
+          <div class="auth-divider my-4"><span>Already registered?</span></div>
+
+          <a href="{{ url_for('login') }}" class="btn-auth-outline w-100">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In Instead
+          </a>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function togglePassword(id, btn) {
+  const input = document.getElementById(id);
+  const icon  = btn.querySelector('i');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.classList.replace('bi-eye', 'bi-eye-slash');
+  } else {
+    input.type = 'password';
+    icon.classList.replace('bi-eye-slash', 'bi-eye');
+  }
+}
+
+// Live password match feedback
+document.getElementById('confirm').addEventListener('input', function() {
+  const msg = document.getElementById('passwordMatchMsg');
+  if (this.value === document.getElementById('password').value) {
+    msg.innerHTML = '<span style="color:#2ecc71"><i class="bi bi-check-circle me-1"></i>Passwords match</span>';
+  } else {
+    msg.innerHTML = '<span style="color:#e74c3c"><i class="bi bi-x-circle me-1"></i>Passwords do not match</span>';
+  }
+});
+</script>
+{% endblock %}

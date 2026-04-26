@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}AirIQ — About{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════════ PAGE HERO ══════════════════ -->
+<section class="page-hero">
+  <div class="container text-center">
+    <div class="hero-badge mb-3"><i class="bi bi-info-circle me-2"></i>About This Project</div>
+    <h1 class="page-hero-title">About AirIQ</h1>
+    <p class="page-hero-subtitle">A data science project built to make air quality data accessible to everyone</p>
+  </div>
+</section>
+
+<!-- ══════════════════ PROJECT OVERVIEW ══════════════════ -->
+<section class="section-padded">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="section-label mb-3">The Project</div>
+        <h2 class="about-heading mb-4">Why Air Quality Matters</h2>
+        <p class="about-text">
+          Air pollution is one of the greatest environmental health risks of our time.
+          The World Health Organisation estimates that over <strong>7 million people</strong> die each
+          year as a result of exposure to fine particles in polluted air.
+        </p>
+        <p class="about-text">
+          <strong>AirIQ</strong> was built as a Data Science internship project to demonstrate how
+          publicly available APIs can be harnessed to surface meaningful environmental insights
+          through a clean, user-friendly web interface.
+        </p>
+        <p class="about-text mb-0">
+          By combining Flask's server-side power, OpenWeatherMap's real-time API, and Bootstrap's
+          responsive components, AirIQ provides instant, city-level air quality reports that are
+          easy to understand and act upon.
+        </p>
+      </div>
+      <div class="col-lg-6">
+        <div class="about-stats-grid">
+          {% set stats = [
+            ('7M+',    'Deaths per year due to air pollution (WHO)'),
+            ('99%',    'Of the global population breathes air exceeding WHO limits'),
+            ('5',      'AQI levels tracked in real time'),
+            ('6',      'Key pollutants measured (PM2.5, PM10, CO, NO₂, O₃, SO₂)'),
+          ] %}
+          {% for value, label in stats %}
+          <div class="stat-box">
+            <div class="stat-value">{{ value }}</div>
+            <div class="stat-label">{{ label }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TEAM / AUTHOR ══════════════════ -->
+<section class="section-padded features-bg">
+  <div class="container">
+    <div class="section-label text-center mb-5">Project Details</div>
+    <div class="row justify-content-center g-4">
+      <div class="col-md-5">
+        <div class="detail-card">
+          <i class="bi bi-mortarboard detail-icon"></i>
+          <h5 class="detail-title">Academic Context</h5>
+          <p class="detail-text mb-0">
+            Submitted as part of a Data Science Internship programme. Demonstrates
+            end-to-end full-stack development skills including API integration,
+            backend logic, database management, and frontend design.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="detail-card">
+          <i class="bi bi-code-slash detail-icon"></i>
+          <h5 class="detail-title">Open Source Stack</h5>
+          <p class="detail-text mb-0">
+            Built entirely with free and open-source tools: Python, Flask, SQLite,
+            Bootstrap 5, and the free tier of the OpenWeatherMap API. No paid
+            infrastructure required to run or deploy.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="detail-card">
+          <i class="bi bi-shield-check detail-icon"></i>
+          <h5 class="detail-title">Data Privacy</h5>
+          <p class="detail-text mb-0">
+            Only a username, email, and hashed password are stored locally. No
+            search history or personal location data is ever persisted. Passwords
+            are hashed using Werkzeug's industry-standard PBKDF2 algorithm.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="detail-card">
+          <i class="bi bi-cloud-check detail-icon"></i>
+          <h5 class="detail-title">Data Source</h5>
+          <p class="detail-text mb-0">
+            All air quality readings come from the
+            <a href="https://openweathermap.org/api/air-pollution" target="_blank" class="text-link">
+              OpenWeatherMap Air Pollution API
+            </a>
+            — a globally trusted meteorological data provider with coverage for
+            thousands of cities.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ CTA ══════════════════ -->
+<section class="section-padded text-center">
+  <div class="container">
+    <h3 class="cta-heading mb-3">Ready to check your city's air?</h3>
+    <a href="{{ url_for('home') }}" class="btn btn-primary-custom">
+      <i class="bi bi-search me-2"></i>Search Air Quality
+    </a>
+  </div>
+</section>
+
+{% endblock %}

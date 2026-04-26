@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}AirIQ — Check Air Quality{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════════ HERO SECTION ══════════════════ -->
+<section class="hero-section">
+  <div class="hero-bg-grid"></div>
+  <div class="container position-relative">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-7">
+
+        <div class="hero-badge mb-4">
+          <i class="bi bi-broadcast-pin me-2"></i>Live Data · Powered by OpenWeatherMap
+        </div>
+
+        <h1 class="hero-title mb-3">
+          Know Your <span class="hero-highlight">Air Quality</span><br/>Instantly
+        </h1>
+        <p class="hero-subtitle mb-5">
+          Enter any city and get real-time AQI, PM2.5, PM10, and more —
+          beautifully visualised in seconds.
+        </p>
+
+        <!-- ── Search Form ── -->
+        <form action="{{ url_for('result') }}" method="POST" class="search-form" id="searchForm">
+          <div class="search-box">
+            <i class="bi bi-search search-icon"></i>
+            <input
+              type="text"
+              name="city"
+              id="cityInput"
+              class="search-input"
+              placeholder="Type a city name… e.g. Mumbai"
+              autocomplete="off"
+              required
+            />
+            <button type="submit" class="search-btn" id="searchBtn">
+              <span class="btn-text">Check Air Quality</span>
+              <span class="btn-spinner spinner-border spinner-border-sm d-none" role="status"></span>
+            </button>
+          </div>
+        </form>
+
+        <p class="search-hint mt-3">
+          <i class="bi bi-lock-fill me-1"></i>Secure session · Data fetched live from weather APIs
+        </p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ AQI SCALE REFERENCE ══════════════════ -->
+<section class="section-padded">
+  <div class="container">
+    <div class="section-label text-center mb-4">AQI Scale Reference</div>
+    <div class="row g-3 justify-content-center">
+      {% set levels = [
+        ('1', 'Good',      'good',      'bi-emoji-smile',       'Little to no risk.'),
+        ('2', 'Fair',      'fair',      'bi-emoji-neutral',     'Acceptable air quality.'),
+        ('3', 'Moderate',  'moderate',  'bi-emoji-expressionless','Sensitive groups affected.'),
+        ('4', 'Poor',      'poor',      'bi-emoji-frown',       'Health effects for all.'),
+        ('5', 'Very Poor', 'very-poor', 'bi-emoji-angry',       'Serious health warnings.'),
+      ] %}
+      {% for num, label, cls, icon, desc in levels %}
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="aqi-card aqi-{{ cls }}">
+          <div class="aqi-card-num">{{ num }}</div>
+          <i class="bi {{ icon }} aqi-card-icon"></i>
+          <div class="aqi-card-label">{{ label }}</div>
+          <div class="aqi-card-desc">{{ desc }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ FEATURES ROW ══════════════════ -->
+<section class="section-padded features-bg">
+  <div class="container">
+    <div class="section-label text-center mb-5">What We Measure</div>
+    <div class="row g-4 justify-content-center">
+
+      {% set features = [
+        ('bi-droplet-half',      'PM2.5',            'Fine particles ≤ 2.5 µm. Penetrate deep into lungs.'),
+        ('bi-cloud-haze2',       'PM10',             'Coarse particles ≤ 10 µm. Cause respiratory issues.'),
+        ('bi-radioactive',       'AQI Index',        'Composite Air Quality Index on a 1–5 scale.'),
+        ('bi-wind',              'CO · NO₂ · O₃',    'Key gaseous pollutants tracked in real time.'),
+        ('bi-globe2',            'Global Coverage',  'Works for thousands of cities worldwide.'),
+        ('bi-clock-history',     'Live Data',        'Fresh readings every time you query.'),
+      ] %}
+      {% for icon, title, desc in features %}
+      <div class="col-sm-6 col-lg-4">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">
+            <i class="bi {{ icon }}"></i>
+          </div>
+          <h5 class="feature-title">{{ title }}</h5>
+          <p class="feature-desc mb-0">{{ desc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Show spinner on form submit
+  document.getElementById('searchForm').addEventListener('submit', function() {
+    const btn  = document.getElementById('searchBtn');
+    const text = btn.querySelector('.btn-text');
+    const spin = btn.querySelector('.btn-spinner');
+    text.textContent = 'Fetching…';
+    spin.classList.remove('d-none');
+    btn.disabled = true;
+  });
+</script>
+{% endblock %}
